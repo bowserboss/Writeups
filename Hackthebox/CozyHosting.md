@@ -63,7 +63,7 @@ Connecting to the db
 ```
 psql -h 127.0.0.1 -U postgres
 psql -h 127.0.0.1 -U postgres
-Password for user postgres: Vg&nvzAQ7XxR
+Password for user postgres: <REDACTED>
 ```
 
 ```
@@ -86,7 +86,7 @@ select * from users;
 ```
 After cracking the hashes we can now connect to the ssh useing josh 
 ```
-josh:manchesterunited
+josh:<REDACTED>
 ```
 I ran sudo -l and looks like we can run ssh as root
 ```
