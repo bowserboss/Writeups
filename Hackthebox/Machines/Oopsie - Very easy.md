@@ -22,6 +22,6 @@ So we can login in as a guest and I found I `IDOR` in the account section we can
 23 - Rafol
 30 - super admin id numer 86575
 ```
-After uploading a php reverse shell got a call back to my machine we go to the `/var/www/html/cdn-cgi/login` with this command `cat * | grep -i passw*` and in the code of one of the files we found a username and password `admin:MEGACORP_4dm1n!!` and if we cat the `db.php` file we get the login for `robert:M3g4C0rpUs3r!` using the find command we can find the files that are group can read 
+After uploading a php reverse shell got a call back to my machine we go to the `/var/www/html/cdn-cgi/login` with this command `cat * | grep -i passw*` and in the code of one of the files we found a username and password `admin:<Redacted>` and if we cat the `db.php` file we get the login for `robert:<Redacted>` using the find command we can find the files that are group can read 
 	`find / -group bugtracker 2>/dev/null`
 and we find the `/usr/bin/bugtracker` are group can exacute looks like this file is using the cat command to read a file so we go to the `/tmp` and make a file called `cat` and then set the permission `chmod +x cat` and then we have to set the path`export PATH=/tmp:$PATH` exacute the bugtracker again with id of `2` and now we have root
