@@ -1,0 +1,7 @@
+Started with a nmap scan with full port scan
+```
+21 vsftp 3.0.3
+22 OpenSSH 8.0p1
+80 Apache 2.4.41
+```
+Starting with the ftp it has anonymous login so we can just login in and we see we have a zip file called `backup.zip` we use zip2john to get the zip file hash and it cracks to `741852963` and now we have two files `index.php` and `style.css` looking at the code of the index.php file and it has a md5 hash that we can crack to `qwerty789` and the username shows that's its admin with this we can try to see if the web site has a place were we can login into the front page of the website is a login so we login with the creds we found and then there is a sqli injection in the search function of the website using the sqli we found we can use sqlmap to pop a shell on the server now this is not the best reverse shell so were going to switch it to just a normal bash reverse shell and going to the `/var/www/html` folder there is a file called `dashboard.php` and it has the creds for the `postgres` and we can use sudo with this user we can use the `vi` program to get root and it tells us what file we can edit to we run the  vi command on the file we can edit and then we type this `:set shell=/bin/sh` and then `:shell` and now we have root.
