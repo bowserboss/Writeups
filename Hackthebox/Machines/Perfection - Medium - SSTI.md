@@ -15,7 +15,7 @@ Looking for SSTI in the calculator page after testing for a while it keep says m
 after a while I found how to get a rev shell I had to put it in a sh file and have the server exacute it and the rev shell stayed and we are now the user `susan` I found a password hash in the 
 	`/home/susan/Migration/pupilpath_credentials.db` 
 We got some hash from this database and using hashcat we can crack the password with this
-	`hashcat -m 1400 hash -a 3 susan_nasus_?d?,,,,,,` 
+	`hashcat -m 1400 hash -a 3 susan_nasus_?d?d?d?d?d?d?d?d?d` 
 Can you this to login into ssh
-	`susan:sudan_nasus_413,,,,,0` 
+	`susan:sudan_nasus_413759210` 
 Now were in as susan and running sudo -l we can do anything so `sudo su root` and now were root
