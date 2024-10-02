@@ -1,0 +1,9 @@
+Started with a nmap scan
+```
+22 OpenSSH 8.2p1 Ubuntu
+3306 MySQL 5.7.40
+5000 Docker Registry API 2.0
+8080 Node.js Express Middleware
+```
+Looking at port 5000 I was doing some google searching to see what it was and came across a hacktricks page showing us how we could enumerate this service we can send HTTP request to this and if we add `/v2/` we get a json page with no info then if we go to `/v2/_catalog` it shows us the images on the host `umbrella/timetracking` and there is a tool called `Docker Registry dumper` on github makes downloading all the images easy after looking in the filesystem for a while I did not find anything so I went back to the curl commands and got to the history and found a db pass in the manifest file 
+`curl -s http://10.10.168.138:5000/v2/umbrella/timetracking/manifests/latest` and we got the db user and pass now `root:Ng1-f3!..................` now we can connect to the mysql service and I had to use the `--skip-ssl` flag and now found a user table and got some hashes there were in MD5 cracked them and we can now login to the web app and we can also login with `claire-r` to SSH reading the code for the site we found a vulnerability in the time page it does a `eval()` command and we can injection payloads into it and get a reverse shell there is a github on `node.js `injections using this injection `arguments[1].end(require('child_process').execSync('cat /etc/passwd'))` and we need to use a perl revshell and base64 encode it and now we are root and in a docker and we need to break out to get to real root we can do a docker breakout with bash we need to copy bash from claire to the logs folder in her home folder and then as root in the container if we go to the `/` and then go to logs we can now see the bash program and we can modify it with this command `chown root:root bash` and then we need to `chmod 4777 bash` and then from claire run `./bash -p` and now we are root 
