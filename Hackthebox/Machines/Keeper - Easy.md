@@ -1,0 +1,6 @@
+Started with a nmap scan
+```
+22 OpenSSH 8.9p1
+80 nginx 1.18.0
+```
+When we go to the site there is a page that says go to `tickets.keeper.htb` to make a IT support ticket its running `Request Tracker` version `4.4.4` but we need to find creds first so I googled if it has default creds and found some that work `root:password` now we have access to the panel doing some googling agin on the version and could not find anything so I was looking around the users and found one other user `lnorgaard` and on the notes it has a password `Welcome2023!` now we can SSH into the server as this user and there is a zip file called `RT3000.zip` and there is a exploit `CVE-2023-32784` it uses a dump file from keepass and running this we get a master key we can use to unlock the keepass file and its a weird word and gives us a error so googling the 3 words I found another 3 words that it could be and it unlocked the database file and looking around in the passcodes there is a folder called Network and if we run `show 0 -f` we get the password for root `...........`  but this password wont work but we do get a key file and we can use puttygen to make a id rsa file and ssh into root 
