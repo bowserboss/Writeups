@@ -1,0 +1,2 @@
+Going to the site its ask us who are favorite artist is and HTB gives us the source code to the site looking at the code we can do prototype pollution attack and I used chatGPT to make me a script to get a reverse shell but there is no bash on the docker so we have to use SH and we send a POST request to `/api/submit` or we can use burp to modify the request 
+`line:"process.mainModule.require('child_process').execSync('$(ls | grep flag)')"` 
