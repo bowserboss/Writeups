@@ -1,0 +1,1 @@
+When going to the site it ask for a link to turn it into a pdf after doing some testing its vulnerable to SSRF so we can make a file on are host to leak the `/etc/passwd` file and then send it to the site and we get the passwd file rendered on the host and we have the flag now 
