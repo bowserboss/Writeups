@@ -1,0 +1,1 @@
+Looking at the source code for the site it does its login checks wrong so if we just make a account and then capture the request and remove the password pram and change the username to `administraotr` and then we can now login as the admin and get the flag 
