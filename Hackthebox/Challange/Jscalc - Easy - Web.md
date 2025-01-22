@@ -1,0 +1,2 @@
+Going to the site it is a calculator that is using javascript and eval so downloading the source code and looking at the js files its going to `/api/calculate` and its using a formula and since we know its useing eval and going some google search I found how to read files with this payload 
+`require('fs').readFileSync('/flag.txt').toString();` and now we have the flag 
