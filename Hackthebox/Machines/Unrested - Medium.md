@@ -1,0 +1,9 @@
+The room gives us creds to a zabbix account `matthew/96qzn0h2e1k3`
+Started with a nmap scan
+```
+22 OpenSSH 8.9p1
+80 Apache 2.4.52
+10050 zabbix
+10051 zabbix
+```
+Going to the webserver its the `zabbix` instance and its running version `7.0.0` and its vulnerable to `CVE-2024-42327` and `CVE-2024-36467` and we can make a request to the `/api_jsonrpc.php` first so we get a token and then we can make a request to the `CUser.php` file now we need to make are user a admin and set are user group to `7` and are user id is `3` and now we can do the SQL injection from the vulnerability we found and we confirmed we do have injection so we can take this request and send it to sqlmap and we got a database called `zabbix` and a table called `sessions` and we get the session tokens for two users and we can take this and auth back to the api as admin and now its time to get RCE there is a poc on exploit-DB but it did not work so we can use the `item.create` to get a reverse shell and we get a call back as zabbix user and we can access the user flag in the matthew home folder and when we run `sudo -l` we can run nmap with no root password but so going to GTFObins and testing the sudo privsec it says its disabled for security reasons so there is something different with this nmap because it does not give those errors so looking at the binary with strings and ghidra it is different and it gives some options that we cant use but what we can do is change the data folder with the `--datadir=/tmp` so we can make a nse script to get use root and now we can run this command `sudo /usr/bin/nmap -sC --datadir=/tmp` and now we are root    
