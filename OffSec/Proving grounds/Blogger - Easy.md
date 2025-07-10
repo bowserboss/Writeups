@@ -1,0 +1,6 @@
+Started with a nmap scan
+```
+22 OpenSSH 7.2p2
+80 Apache 2.4.18
+```
+Going to the website its a pretty static site all we got is a contact forum that does send a POST request and a login forum we can make a account but we cant register are email and it needs email to login and the POST request is sending nothing on register and login looking at the `/assets/fonts/blog` there is a blog we can see and if we want to read the whole post to the site it goes to a domain `blogger.pg` and when we go to that site its a wordpress site so going to run `wpscan` wordpress version `4.9.8` theme is use `poseidon` usernames `j@m3s,jm3s` after doing some more enumeration I found its also running `wpdiscuz` plugin version `7.0.4` and its vulnerable to `CVE-2020-24186` and we can use this to get a reverse shell as the user `www-data` and looking in the `wp-config.php` we can find the mysql creds `root:sup3r_s3cr3t` and in the `wp_users` table we find a hash for the user james that is hashed with `phppass` we can try to crack this but we was not able to so going back to the home folder and looking at all the users and just trying there username as the password and we got into `vagrant` and when we run `sudo -l` we can just `sudo bash` and now we are root 
