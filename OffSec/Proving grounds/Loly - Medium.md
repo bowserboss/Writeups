@@ -1,0 +1,5 @@
+Started with a nmap scan
+```
+80 nginx 1.10.3
+```
+Going to the site it a default nginx page so running a gobuster scan found a `/wordpress/` and we have a wordpress site so gonna run `wpscan` and find the version and what's on it version is `5.5` and a user of `loly` so we can try and brute the user and we have the login `loly:fernando` going to `wp-admin` it redirects us to a domain `loly.lc` and now we can login and we are admin user and looking around under the `adrotate` menu there is `Manage Media ` and we can use this to upload a zip folder we can use this to get a reverse shell so lets take php pentest monkey shell and zip it up `zip rev.zip -r rev.php` and then upload it we got `www-data` user looking at the `wp-config.php` we get the login to the database `wordpress:lolyisabeautifulgirl` we get into the database and its only the one user as I thought but we can try this password as the user on the machine and now we are the `loly` user going to run linpeas now and we can use alot of old exploits on this host I chose dirty c0w and got root 

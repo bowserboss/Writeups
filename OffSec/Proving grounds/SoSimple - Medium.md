@@ -1,0 +1,6 @@
+Started with a nmap scan
+```
+22 OpenSSH 8.2p1
+80 Apache 2.4.41
+```
+Looking at the source code and at the bottom is says nothing to see here so running a gobuster scan and found a folder called `/wordpress/` and we now have a wordpress site so running wp scan and we can find the version `5.4.2` and we have two plugins `simple-cart-solution,social-warfare` and we got 2 users `admin,max` looking at these plugins the `social-warfare` is vulnerable to `CVE-2019-9978` its a un auth RCE and we can use this to get a reverse shell as `www-data` and we can look in the `wp-config.php` file and we got the mysql login `wp_users:password` and we can get the users hashes and we cracked one `max:opensesame` but we can do nothing with this right now so gonna run linpeas we can read `max` `id_rsa` file and it has no password on it so we can get to the user max now and when we login we can run `sudo -l` and run a binary `service` as sudo as `steven` we can go to GTFObins and there is a sudo exploit for this so now we can get to the user `steven` which has sudo rights on a script that does not exist so we can make this script and it will run as root with no password so we can get a shell or just get the flag as root 
