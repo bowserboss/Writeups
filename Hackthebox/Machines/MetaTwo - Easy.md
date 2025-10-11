@@ -1,0 +1,7 @@
+Started with a nmap scan
+```
+21 ProFTP
+22 OpenSSH 8.4p1
+80 nginx 1.18.0
+```
+Domain `metapress.htb` Looking at the site we have a wordpress site running version `5.6.2` and got two users `admin,manager` The only function we have with the site is a appointment booking we can test this for sqli injection testing it will sqlmap found a injection and we can dump the database  called `blog` and the table `wp_users` we got both the users and there hash but we can only crack one `manager:partylikearockstar` after we login the only thing we can do is upload media looking on google for any exploits for this I found one `CVE-2021-29447` and we can use this xxe to get the `wp-config.php` and this file has DB creds and FTP creds `metapress.htb:9NYS_ii@FyL_p5M2NvJ` after we login we get a two folders and there is a `mailer` folder and a `send_email.php` file which has some creds for a user `jnelson:Cb4_JmWM8zUZWMu@Ys` and from the xee we had got the `/etc/passwd` we know there is a ssh user with this name and we can login into SSH with this and we got the user flag running linpeas we see we have something called `passpie` and 2 files `jnlson.key` and `root.key` this program is a password manager and its running version `1.6.1` but I cant find anything on it but we did find some pgp keys and we can crack these with john and then unlock the password for the root user 

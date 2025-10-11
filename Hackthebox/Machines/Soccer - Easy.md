@@ -1,0 +1,8 @@
+Started with a nmap scan
+```
+22 OpenSSH 8.2p1
+80 nginx 1.18.0
+9091 xmltec-xmlmail
+```
+Domain `soccer.htb` 
+Running a gobuster scan I found a `/tiny` its a file manager version `2.4.3` on this we have default creds `admin:admin@123` and now we have access to the admin account and there is a authenticated RCE `CVE-2021-45010` but we could also just make a new folder in side on uploads because everything thing is set to root and we cant edit or change anything but we can make a new folder and set are permissions on it and upload a shell and just upload a reverse shell looking around the machine I found a subdomain `soc-player.soccer.htb` and this site has more to it we can make a account and login and then check are ticket status which talks over websockets we can use sqlmap for this there is a repo on github that someone made to handle the socket connection and then proxy it to sqlmap https://github.com/BKreisel/sqlmap-websocket-proxy get this running and then we can run this command `python3 main.py -u ws://soc-player.soccer.htb:9091 -d '{"id": "%param%"}'` and then run sqlmap `sqlmap -u http://localhost:8080/?param1=1` and we found a blind sql injection and we have 5 DB but we after the `soccer_db` and we got creds for the user account `player:PlayerOftheMatch2022` and going back to the linepas output we said the player user has access to the `/usr/local/bin/doas` which has suid binary set for root and we have permission over a config file `/usr/local/bin/../etc/doas.conf` so we can use this to get root `echo 'import os; os.system("/bin/bash")' > /usr/local/share/dstat_exploit.py` and then to verify its in the right place and dstat will use it `does /usr/bin/dstat --list` and now run it `does /usr/bin/dstat --exploit` and now we are root user 
