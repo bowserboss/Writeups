@@ -1,0 +1,6 @@
+Started with a nmap scan
+```
+22 OpenSSH 7.9p1
+80 nostromo 1.9.5
+```
+Going to the website its a unfinished website the contact form does not work looking up the webserver and there is a exploit RCE `nostromo 1.9.5` using this exploit we can go to the `/var/nostromo/conf/.htpasswd` and there is a login with a hash for the user `david` and we can crack this hash `Nowonly4me` looking at the config file its listing some folders the one we want is `public_www` and it has a backup of the home folder of David we can `cp` this to `/tmp` and un tar it and now we have the `id_rsa` key we have to use `ssh2john id_rsa > id_rsa-hash` and then we can use john to crack it `john id_rsa-hash --wordlist=/usr/share/wordlist/rockyou.txt` and it cracked to `hunter` now we can ssh into the host as david in are home folder there is a bin folder with a `sh` script looking at the script there is a command we can run as sudo and looking at GTFObins we can do a breakout `journalctl` the trick here tho is we have to make are terminal super small so we can enter the break out command `!/bin/bash` and now we are root  
