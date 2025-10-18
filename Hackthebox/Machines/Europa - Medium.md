@@ -1,0 +1,8 @@
+Started with a nmap scan
+```
+22 OpenSSH 7.2p2
+80 Apache 2.4.18
+443 Apache 2.4.18
+```
+The nmap scan also shows a domain and a subdomain `eurioacorp.htb` and `admin-portal.europcacorp.htb` 
+Going to the webserver on port `80` all the sites just show a default login page checking them out on port `443` only the `admin-portal` one redirects to a login page testing this login forum testing for sql injection with `'` and we get a sql error so running this login forum with sqlmap and it is vulnerable the database is `admin` with one table `users` now we can dump it we dumped two users but we cant crack the hash so to access the site we can use sqlmap with the proxy setting and step threw it with burp and stop it when it redirects to the dashboard and take the cookie and now we can access the dashboard looking at the dashboard now its pretty static and the only thing is a openvpn config generator and this submits a POST request and one of the parameters `pattern` has a regex expression and this version of php the site is using is vulnerable to command injection `preg_replace()` so in the request we need to do `pattern=/a/e&ipaddress=system("id")` and url encode `/`  and send the request and we got code execution as `www-data` now we can get a reverse shell and url encode the payload and now we are `www-data` looking at the `db.php` there is creds for the database `john:iEOERHRiDnwkdnw` looking around the host some more there is a cronjob running `/var/www/cronjobs/clearlogs` and if we look at the file its using a file that does not exist so we can make the file and put a reverse shell in it and then `chmod +x logcleared.sh` and now we are root 
