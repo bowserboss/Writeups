@@ -1,0 +1,7 @@
+Started with a nmap scan
+```
+22 OpenSSH 7.2p2
+80 Apache 2.4.18
+```
+There is a domain linked to the webserver `http://tenten.htb` 
+Going to the website its a wordpress site running version `4.7.3` and its the normal vulnerable themes `twentyseventeen` Plugins running `job-manager` version `7.2.5` but this might be wrong it might be version `0.7.25 `users found `takis` doing some google searching there is a IDOR exploit for `job manager` `CVE-2015-6668` and there is a poc on github and reading the code for the poc its looking for images in the uploads folder and clicking around on the site we can find a path that we can fuzz `/wp-content/uploads/2017/04` and there is a image on the machine called `hackeraccessgranted.jpg` and it has some steg in the image and there is no password on the image when we try to extract what in it `stegseek hackeraccessgranted.jpg /usr/share/wordlists/rockyou.txt` and there is a `id_rsa` that is password protected that we got so we can use `ssh2john` to make it in a hash we can try to crack `ssh2john hackeraccessgranted.jpg.out > id_rsa_hash` now to crack it `john id_rsa_hash --wordlists=/usr/share/wordlists/rockyou.txt` and we got the password `superpassword` so now we can ssh into the host with the `id_rsa` running `sudo -l` we can sudo right on a file `/bin/fuckin` if we cat the file its a bash script that just takes up to 4 arugs so we can `sudo /bin/fuckin cat /root/root.txt` and we have the root flag 
